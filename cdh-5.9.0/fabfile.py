@@ -1,11 +1,12 @@
 # -*- coding:utf8 -*-
 from __future__ import with_statement
-from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts
+from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd
+from fabric.contrib import files
 
 env.hosts = ['dev@192.168.181.21', 'dev@192.168.181.22',
              'dev@192.168.181.23', 'dev@192.168.181.24']
 env.roledefs = {'cdh': env.hosts,
-                'dd': env.hosts[:2]}
+                'master': ['dev@192.168.181.21']}
 res = None
 """
 env
@@ -45,7 +46,8 @@ def deploy():
 @roles('cdh')
 def useradd():
     # 是否存在cloudera-scm
-    sudo('useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
+    sudo(
+        'useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
 
 
 @roles('cdh')
@@ -59,3 +61,42 @@ def copy_cm():
 @roles('cdh')
 def clear_cm():
     run('rm -fr /opt/cm-5.9.0')
+
+
+@roles('master')
+def init_mysql():
+    with cd('/opt/cm-5.9.0'):
+        run(
+            './share/cmf/schema/scm_prepare_database.sh mysql cm -h192.168.232.53 -uroot -padmin --scm-host 192.168.232.53 root admin scm')
+        run(
+            './share/cmf/schema/scm_prepare_database.sh mysql cm -h192.168.181.21 -uroot -padmin --scm-host 192.168.181.21 root admin scm')
+
+
+@roles('cdh')
+def update_master_host():
+    config_filename = '/opt/cm-5.9.0/etc/cloudera-scm-agent/config.ini'
+    # files.comment(config_filename, '^server_host', use_sudo=False, char='#', backup='.bak', shell=False)
+    # files.append(config_filename, 'server_host=storm1')
+    files.sed(config_filename, '^server_host=localhost', 'server_host=storm1', limit='', use_sudo=False, backup='.bak',
+              flags='', shell=False)
+    # files.sed(config_filename, '^server_host.*', '', limit='', use_sudo=False, backup='.bak', flags='', shell=False)
+
+
+@roles('cdh')
+def start_agent():
+    run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-agent start')
+
+
+@roles('master')
+def start_server():
+    run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-server start')
+
+
+@roles('master')
+def stop_server():
+    run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-server stop')
+
+
+@roles('cdh')
+def stop_agent():
+    run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-agent stop')
