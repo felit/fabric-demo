@@ -1,6 +1,6 @@
 # -*- coding:utf8 -*-
 from __future__ import with_statement
-from fabric.api import run, env, execute, roles, runs_once, parallel
+from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts
 
 env.hosts = ['dev@192.168.181.21', 'dev@192.168.181.22',
              'dev@192.168.181.23', 'dev@192.168.181.24']
@@ -41,3 +41,21 @@ def deploy():
         print host, key
     execute(second)
 
+
+@roles('cdh')
+def useradd():
+    # 是否存在cloudera-scm
+    sudo('useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
+
+
+@roles('cdh')
+@parallel
+# @hosts('dev@192.168.181.21')
+def copy_cm():
+    cm_file_path = "dev@storm1:/data/cm-5.9.0"
+    run('scp -r {cm_file_path} /opt'.format(cm_file_path=cm_file_path))
+
+
+@roles('cdh')
+def clear_cm():
+    run('rm -fr /opt/cm-5.9.0')
