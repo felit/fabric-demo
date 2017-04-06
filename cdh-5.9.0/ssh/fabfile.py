@@ -2,6 +2,7 @@
 from __future__ import with_statement
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
 from fabric.contrib import files
+
 """
 通过execute重复调用一个方法
 直接调用方法　区别
@@ -10,6 +11,7 @@ from fabric.contrib import files
 # 通过roles与横块化来实现可重用
 # known_hosts处理，不然会提示信息
 # task 任务可重用
+@roles('interflow_hosts')
 def gen_public_key():
     """
     生成id_rsa
@@ -19,10 +21,12 @@ def gen_public_key():
         run("ssh-keygen -t rsa -f ~/.ssh/id_rsa -P ''")
 
 
+@roles('interflow_hosts')
 def get_id_ras_public_key():
     return run('cat ~/.ssh/id_rsa.pub')
 
 
+@roles('interflow_hosts')
 def append_authrozied_key(key):
     files.append('~/.ssh/authorized_keys', key)
 
@@ -44,6 +48,7 @@ def add_public_key_authorizied_keys(add_keys=[]):
 
 
 @task
+@roles('interflow_hosts')
 def clear_id_rsa():
     if files.exists('.ssh/id_rsa'):
         run('rm ~/.ssh/id_rsa*')
