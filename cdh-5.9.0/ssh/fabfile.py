@@ -11,6 +11,7 @@ from fabric.contrib import files
 # 通过roles与横块化来实现可重用
 # known_hosts处理，不然会提示信息
 # task 任务可重用
+# @parallel(pool_size=5)
 @roles('interflow_hosts')
 def gen_public_key():
     """
@@ -25,7 +26,7 @@ def gen_public_key():
 def get_id_ras_public_key():
     return run('cat ~/.ssh/id_rsa.pub')
 
-
+@parallel(pool_size=5)
 @roles('interflow_hosts')
 def append_authrozied_key(key):
     files.append('~/.ssh/authorized_keys', key)

@@ -2,7 +2,7 @@
 from ssh import fabfile
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
 
-env.hosts = ['vagrant@192.168.58.10', 'vagrant@192.168.58.12', 'vagrant@192.168.58.13']
+env.hosts = ['root@192.168.58.10', 'root@192.168.58.12', 'root@192.168.58.13']
 # env.passwords={
 # 'vagrant@192.168.58.10':'vagrant',
 # 'vagrant@192.168.58.12':'vagrant',
