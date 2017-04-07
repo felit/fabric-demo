@@ -4,7 +4,8 @@ from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, host
 from fabric.contrib import files
 # root w@^s1kta!FQq7z3H
 # env.hosts = ['vagrant@192.168.58.10', 'vagrant@192.168.58.12', 'vagrant@192.168.58.13']
-env.hosts = ['root@192.168.58.10', 'root@192.168.58.12', 'root@192.168.58.13']
+# env.hosts = ['root@192.168.58.10', 'root@192.168.58.12', 'root@192.168.58.13']
+env.hosts = ['root@10.91.11.43', 'root@10.91.12.13', 'root@10.91.12.16','root@10.91.34.2']
 env.roledefs = {'cdh': env.hosts,
                 'master': env.hosts[:1]}
 res = None

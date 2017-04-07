@@ -18,6 +18,10 @@ def gen_public_key():
     生成id_rsa
     :return:
     """
+    if files.exists('.ssh'):
+        run('chmod 700 .ssh')
+    if files.exists('.ssh/authorized_keys'):
+        run('chmod 600 .ssh/authorized_keys')
     if not files.exists('.ssh/id_rsa.pub'):
         run("ssh-keygen -t rsa -f ~/.ssh/id_rsa -P ''")
 
