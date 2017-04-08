@@ -18,10 +18,14 @@ def gen_public_key():
     生成id_rsa
     :return:
     """
-    if files.exists('.ssh'):
-        run('chmod 700 .ssh')
-    if files.exists('.ssh/authorized_keys'):
-        run('chmod 600 .ssh/authorized_keys')
+    if not files.exists('.ssh'):
+        run('mkdir .ssh')
+    run('chmod 700 .ssh')
+
+    if not files.exists('.ssh/authorized_keys'):
+        run('touch .ssh/authorized_keys')
+    run('chmod 600 .ssh/authorized_keys')
+
     if not files.exists('.ssh/id_rsa.pub'):
         run("ssh-keygen -t rsa -f ~/.ssh/id_rsa -P ''")
 
@@ -29,6 +33,7 @@ def gen_public_key():
 @roles('interflow_hosts')
 def get_id_ras_public_key():
     return run('cat ~/.ssh/id_rsa.pub')
+
 
 @parallel(pool_size=5)
 @roles('interflow_hosts')

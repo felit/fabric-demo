@@ -1,16 +1,17 @@
 # -*- coding:utf8 -*-
 from __future__ import with_statement
-from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd
+from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
 from fabric.contrib import files
 # root w@^s1kta!FQq7z3H
-env.hosts = ['root@10.91.11.43', 'root@10.91.12.13', 'root@10.91.12.16', 'root@10.91.34.2']
+env.hosts = ['root@192.168.0.4', 'root@192.168.0.2', 'root@192.168.0.3']
 env.roledefs = {'cdh': env.hosts,
                 'master': env.hosts[:1],
                 'slaves': env.hosts[1:],
                 'mysql': env.hosts[:1],
+                'interflow_hosts': env.hosts
 }
 from mysql.install import install_mysql
-
+# tail -f /opt/cm-5.9.0/log/cloudera-scm-server/cloudera-scm-server.log
 res = None
 """
 env
@@ -18,11 +19,21 @@ env
 <class 'fabric.utils._AttributeDict'>
 """
 MASTER_HOST = env.roledefs['master'][0].split('@')[1]
+from ssh import fabfile
+
+
+@task(alias='interflow_hosts')
+@runs_once
+def add_keys():
+    execute(fabfile.add_public_key_authorizied_keys, add_keys=[])
 
 
 @runs_once
+@task
 def deploy():
+    execute(add_keys)
     execute(useradd)
+    execute(config_hosts)
     execute(update_kernel)
     execute(config_hosts)
     execute(install_jdk)
@@ -38,7 +49,8 @@ def start():
     execute(start_agent)
 
 
-@roles('cdh')
+@roles('slaves')
+@task
 def useradd():
     # 是否存在cloudera-scm
     sudo(
@@ -46,6 +58,7 @@ def useradd():
 
 
 @roles('cdh')
+@task
 def config_hosts():
     """
     TODO 配置hosts信息
@@ -57,7 +70,11 @@ def config_hosts():
         files.append('/etc/hosts', '%s   kylin%s' % (host.split('@')[1], i))
 
 
+# TODO　更新/etc/sysconfig/network
+
+
 @roles('cdh')
+@task
 def update_kernel():
     run('echo 10 > /proc/sys/vm/swappiness')
     run('echo never > /sys/kernel/mm/transparent_hugepage/defrag')
@@ -70,15 +87,13 @@ def install_jdk():
     """
     with cd('/opt'):
         run('tar -zxvf /data/jdk-8u66-linux-x64.tar.gz')
+
     files.append('~/.bashrc', 'export JAVA_HOME=/opt/jdk1.8.0_66')
     files.append('~/.bashrc', 'export PATH=/opt/jdk1.8.0_66/bin:$PATH')
 
 
-def passwd_root():
-    run('sudo passwd root')
-
-
 @roles('master')
+@task
 def init_mysql_driver():
     run('cp /data/python2.7/mysql-connector-java-5.1.41-bin.jar /opt/cm-5.9.0/share/cmf/lib')
     with cd('/opt/cm-5.9.0'):
@@ -90,6 +105,7 @@ def init_mysql_driver():
 
 
 @roles('master')
+@task
 def update_master_host():
     config_filename = '/opt/cm-5.9.0/etc/cloudera-scm-agent/config.ini'
     # TODO 改成动态
@@ -104,11 +120,16 @@ def install_cm():
     """
     with cd('/opt'):
         run('tar -zxvf /data/cloudera-manager-el6-cm5.9.0_x86_64.tar.gz')
-    run('mkdir -p /opt/cloudera/parcels')
-    run('cp /data/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel /opt/cloudera/parcels')
+    run('mkdir -p /opt/cloudera/parcel-repo')
+    run('cp /data/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel /opt/cloudera/parcel-repo')
+    run(
+        'cp /data/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel.sha1 /opt/cloudera/parcel-repo/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel.sha')
+    run('cp /data/manifest.json /opt/cloudera/parcel-repo/manifest.json')
+    run('chown -R cloudera-scm:cloudera-scm /opt/cloudera')
 
 
 @roles('master')
+@task
 def config_cm():
     """
       配置Cloudera Manager
@@ -118,6 +139,8 @@ def config_cm():
 
 
 @roles('slaves')
+@task(alias='sync_cm')
+@parallel
 def sync_cm():
     """
       同步cm
@@ -125,24 +148,33 @@ def sync_cm():
     """
     with cd('/opt'):
         run('scp -r root@%s:/opt/cm-5.9.0 ./' % (MASTER_HOST))
+    with cd('/opt'):
+        run('scp -r root@%s:/opt/jdk1.8.0_66 ./' % (MASTER_HOST))
+
+    files.append('~/.bashrc', 'export JAVA_HOME=/opt/jdk1.8.0_66')
+    files.append('~/.bashrc', 'export PATH=/opt/jdk1.8.0_66/bin:$PATH')
 
 
 @roles('cdh')
+@task
 def start_agent():
     run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-agent start')
 
 
 @roles('master')
+@task
 def start_server():
     run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-server start')
 
 
 @roles('master')
+@task
 def stop_server():
     run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-server stop')
 
 
 @roles('cdh')
+@task
 def stop_agent():
     run('/opt/cm-5.9.0/etc/init.d/cloudera-scm-agent stop')
 
@@ -150,6 +182,13 @@ def stop_agent():
 @roles('cdh')
 def clear_cm():
     run('rm -fr /opt/cm-5.9.0')
+
+
+@roles('cdh')
+@task
+def install_commands():
+    # run('yum -y install bind-utils ')
+    run('ps -ef | grep python ')
 
 
 @runs_once

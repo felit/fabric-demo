@@ -14,7 +14,7 @@ def mount_deploy_disk():
 
 def install_yum():
     run('yum update -y')
-    run('yum -y install wget unzip gcc openssl-devel zlib zlib-devel')
+    run('yum -y install wget unzip gcc openssl-devel zlib zlib-devel bind-utils')
 
 
 def install_python():
@@ -63,8 +63,8 @@ def upload_scripts():
     :return:
     """
     local('scp -r /data/source/self/fabric-demo/cdh-5.9.0 root@139.198.6.107:~/')
-    with cd('cdh-5.9.0'):
-        run('fab deploy')
+    # with cd('cdh-5.9.0'):
+    #     run('fab deploy')
 
 
 @runs_once
@@ -75,3 +75,4 @@ def install():
     execute(install_pre_requirement)
     execute(install_pip)
     execute(install_pip_libraries)
+    execute(upload_scripts)
