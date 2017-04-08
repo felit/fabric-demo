@@ -1,13 +1,14 @@
-# -*- coding:utf -*-
+# -*- coding:utf8 -*-
 from __future__ import with_statement
-from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd
+from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, local
+from fabric.contrib import files
 
 env.hosts = ['root@139.198.6.107']
 
 
 def mount_deploy_disk():
-
-    # run('mkdir /data')
+    if not files.exists('/data'):
+        run('mkdir /data')
     run('mount /dev/sdc /data')
 
 
@@ -56,11 +57,21 @@ def install_pip_libraries():
     run('pip install paramiko Fabric')
 
 
+def upload_scripts():
+    """
+    上传脚本
+    :return:
+    """
+    local('scp -r /data/source/self/fabric-demo/cdh-5.9.0 root@139.198.6.107:~/')
+    with cd('cdh-5.9.0'):
+        run('fab deploy')
+
+
 @runs_once
 def install():
-    # execute(mount_deploy_disk)
-    # execute(install_yum)
-    # execute(install_python)
+    execute(mount_deploy_disk)
+    execute(install_yum)
+    execute(install_python)
     execute(install_pre_requirement)
     execute(install_pip)
     execute(install_pip_libraries)
