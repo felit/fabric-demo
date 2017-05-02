@@ -25,14 +25,19 @@ from ssh import fabfile
 @task(alias='interflow_hosts')
 @runs_once
 def add_keys():
-    execute(fabfile.add_public_key_authorizied_keys, add_keys=[])
+    execute(fabfile.add_public_key_authorizied_keys, add_keys=['ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHJXAZx0EzfFtyoFJvimiP1J4/XZZU7WOtx/cH2/dHAi5eBjqk5WjSRVgYGmJWCrivE2KEub25fGqR1wVnZXSfP3x9PsQnE5eO5I/K2OAfUGakHVZeYKm3J5ADryxcRxcKj8d0Y+/PHSyrL0smN+ZyyYqFJ2nfW2tGYKAK9bwdwjcf/QgnR558SbWAjKmBp81JUxQUpkNO+Hv4yIaPPbsYXsVk752DjIrgsE2riGrjCLju1yBu6T7mYw0wEpn4XrE0WQfyZkBRV/BS4Iz1iFYQExrsWaJbe82Gt00TJksbJJN81FGtllmo1AdGTVonwpv3dAS6AMfT2RcFrPZw018v congsl@congsl'])
 
+# mkdir -p /var/lib/cloudera-scm-server
 
 @runs_once
 @task
 def deploy():
     execute(add_keys)
     execute(useradd)
+    execute(ulimit)
+    execute(yum)
+    execute(ntp)
+    execute(rpc)
     execute(config_hosts)
     execute(update_kernel)
     execute(config_hosts)
@@ -46,6 +51,7 @@ def deploy():
 @runs_once
 def start():
     execute(start_server)
+
     execute(start_agent)
 
 
@@ -53,8 +59,7 @@ def start():
 @task
 def useradd():
     # 是否存在cloudera-scm
-    sudo(
-        'useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
+    sudo('useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
 
 
 @roles('cdh')
@@ -68,7 +73,9 @@ def config_hosts():
     for host in env.hosts:
         i += 1
         files.append('/etc/hosts', '%s   kylin%s' % (host.split('@')[1], i))
-
+    # TODO
+    # /etc/sysconfig/network HOSTNAME=kylin1
+    # hostname kylin1
 
 # TODO　更新/etc/sysconfig/network
 
@@ -78,8 +85,35 @@ def config_hosts():
 def update_kernel():
     run('echo 10 > /proc/sys/vm/swappiness')
     run('echo never > /sys/kernel/mm/transparent_hugepage/defrag')
+    files.append('/etc/rc.local','echo never > /sys/kernel/mm/transparent_hugepage/defrag')
 
 
+@roles('cdh')
+@task
+def ulimit():
+    files.append('/etc/security/limits.conf', '* soft nofile 65535')
+    files.append('/etc/security/limits.conf', '* hard nofile 65535')
+
+
+@roles('cdh')
+@task
+def ntp():
+    run('yum install -y ntp')
+    run('service ntpd start')
+    run('chkconfig ntpd on')
+
+
+# cp /opt/cm-5.9.0/share/cmf/lib/mysql-connector-java-5.1.41-bin.jar /opt/cloudera/parcels/CDH-5.9.0-1.cdh5.9.0.p0.23/lib/hive/lib/
+@roles('cdh')
+@task
+def rpc():
+    run('yum install -y rpcbind.x86_64')
+    run('service rpcbind start')
+
+@roles('cdh')
+@task
+def yum():
+    run('yum install -y perl vim')
 @roles('master')
 def install_jdk():
     """
@@ -96,12 +130,16 @@ def install_jdk():
 @task
 def init_mysql_driver():
     run('cp /data/python2.7/mysql-connector-java-5.1.41-bin.jar /opt/cm-5.9.0/share/cmf/lib')
+    # grant all privileges on *.* to 'root'@'%' identified  by 'admin'
+    # flush privileges;
+    # create database reports_manager;
+    # create database activity_monitor;
+    # create database hive;
     with cd('/opt/cm-5.9.0'):
         """
           更新IP
         """
-        run(
-            './share/cmf/schema/scm_prepare_database.sh mysql cm -h10.91.7.5 -uroot -padmin --scm-host 192.168.58.1 root admin scm -f')
+        run("./share/cmf/schema/scm_prepare_database.sh mysql cm -h{mysql_host} -uroot -padmin --scm-host {scm_host} root admin scm -f".format(mysql_host='192.168.0.4',scm_host='192.168.0.4'))
 
 
 @roles('master')

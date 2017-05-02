@@ -14,7 +14,7 @@ def mount_deploy_disk():
 
 def install_yum():
     run('yum update -y')
-    run('yum -y install wget unzip gcc openssl-devel zlib zlib-devel bind-utils')
+    run('yum -y install wget unzip gcc openssl-devel zlib zlib-devel bind-utils vim')
 
 
 def install_python():
