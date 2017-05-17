@@ -109,6 +109,7 @@ def ntp():
 def rpc():
     run('yum install -y rpcbind.x86_64')
     run('service rpcbind start')
+    run('chkconfig rpcbind on')
 
 @roles('cdh')
 @task

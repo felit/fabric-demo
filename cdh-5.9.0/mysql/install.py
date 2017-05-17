@@ -1,5 +1,5 @@
 # -*- coding:utf8 -*-
-from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
+from fabric.api import run, execute, roles, task
 
 
 @roles('mysql')
