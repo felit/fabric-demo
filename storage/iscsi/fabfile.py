@@ -1,0 +1,1 @@
+# sudo  yum -y install scsi-target-utils
