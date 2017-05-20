@@ -8,7 +8,7 @@ env.hosts = ['dev@192.168.181.21',
              'dev@192.168.181.23',
              'dev@192.168.181.24']
 
-
+# TODO ceph.conf 改成模板
 @task
 @parallel
 def install():

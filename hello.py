@@ -62,6 +62,3 @@ def config_hbase():
 def remove_hbase1():
    run('rm -fr /opt/hbase-1.0.1.1')
    run('rm -fr /opt/software/hbase-1.0.1.1-bin.tar.gz')
-
-def sd():
-  #192.168.181.23:/opt/software
