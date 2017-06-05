@@ -2,12 +2,19 @@ from __future__ import with_statement
 from fabric.api import run
 from fabric.api import local
 import logging
-from fabric.api import local, settings, abort, lcd, cd,get
+from fabric.api import local, settings, abort, lcd, cd, get, env,roles
 from fabric.contrib.console import confirm
 
 # logging.basicConfig(level=logging.DEBUG)
+env.roledefs = {
+    'test': {
+        'host': 'localhost',
+        'env': 'content'
+    }
 
+}
 
+@roles('test')
 def host_type():
     run('uname -s')
     # run('ps -ef')
@@ -21,7 +28,9 @@ def hello(name='world', action='get away'):
 def local_test():
     local('git status')
 
-
+def get_ip():
+    result = run("ifconfig| grep 192| awk -F: '{print$2}'| awk '{print $1}'")
+    print result
 # Failure Handling
 def test():
     with settings(warn_only=True):
@@ -47,8 +56,12 @@ def test_cd():
     with cd(code_dir):
         run("pwd")
         run("ls")
+
+
 def get_public_key():
     result = run('more ~/.ssh/id_rsa.pub')
     print result
+
+
 def get_file():
     get('~/.ssh/id_rsa.pub')

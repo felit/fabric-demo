@@ -7,7 +7,9 @@ env.hosts = ['dev@192.168.181.21',
              'dev@192.168.181.22',
              'dev@192.168.181.23',
              'dev@192.168.181.24']
-
+env.hosts=['root@192.168.0.2',
+           'root@192.168.0.3',
+           'root@192.168.0.4']
 # TODO ceph.conf 改成模板
 @task
 @parallel

@@ -3,7 +3,15 @@ from __future__ import with_statement
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
 from fabric.contrib import files
 # root w@^s1kta!FQq7z3H
-env.hosts = ['root@192.168.0.4', 'root@192.168.0.2', 'root@192.168.0.3']
+env.hosts = ['root@192.168.0.2', 'root@192.168.0.4', 'root@192.168.0.3','root@192.168.0.5']
+env.password='Rootadmin1'
+hostname_map = {
+    '192.168.0.2':'kylin1',
+    '192.168.0.3':'kylin2',
+    '192.168.0.4':'kylin3',
+    '192.168.0.5':'kylin4',
+
+}
 env.roledefs = {'cdh': env.hosts,
                 'master': env.hosts[:1],
                 'slaves': env.hosts[1:],
@@ -25,7 +33,9 @@ from ssh import fabfile
 @task(alias='interflow_hosts')
 @runs_once
 def add_keys():
-    execute(fabfile.add_public_key_authorizied_keys, add_keys=['ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHJXAZx0EzfFtyoFJvimiP1J4/XZZU7WOtx/cH2/dHAi5eBjqk5WjSRVgYGmJWCrivE2KEub25fGqR1wVnZXSfP3x9PsQnE5eO5I/K2OAfUGakHVZeYKm3J5ADryxcRxcKj8d0Y+/PHSyrL0smN+ZyyYqFJ2nfW2tGYKAK9bwdwjcf/QgnR558SbWAjKmBp81JUxQUpkNO+Hv4yIaPPbsYXsVk752DjIrgsE2riGrjCLju1yBu6T7mYw0wEpn4XrE0WQfyZkBRV/BS4Iz1iFYQExrsWaJbe82Gt00TJksbJJN81FGtllmo1AdGTVonwpv3dAS6AMfT2RcFrPZw018v congsl@congsl'])
+    execute(fabfile.add_public_key_authorizied_keys, add_keys=[
+        'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHJXAZx0EzfFtyoFJvimiP1J4/XZZU7WOtx/cH2/dHAi5eBjqk5WjSRVgYGmJWCrivE2KEub25fGqR1wVnZXSfP3x9PsQnE5eO5I/K2OAfUGakHVZeYKm3J5ADryxcRxcKj8d0Y+/PHSyrL0smN+ZyyYqFJ2nfW2tGYKAK9bwdwjcf/QgnR558SbWAjKmBp81JUxQUpkNO+Hv4yIaPPbsYXsVk752DjIrgsE2riGrjCLju1yBu6T7mYw0wEpn4XrE0WQfyZkBRV/BS4Iz1iFYQExrsWaJbe82Gt00TJksbJJN81FGtllmo1AdGTVonwpv3dAS6AMfT2RcFrPZw018v congsl@congsl'])
+
 
 # mkdir -p /var/lib/cloudera-scm-server
 
@@ -58,26 +68,24 @@ def start():
 @roles('slaves')
 @task
 def useradd():
-    # 是否存在cloudera-scm
-    sudo('useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
+    # TODO 是否存在cloudera-scm
+    sudo(
+        'useradd --system --home=/opt/cm-5.9.0/run/cloudra-scm-server --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm')
 
 
 @roles('cdh')
 @task
 def config_hosts():
     """
-    TODO 配置hosts信息
+      配置hosts信息
     :return:
     """
-    i = 0
-    for host in env.hosts:
-        i += 1
-        files.append('/etc/hosts', '%s   kylin%s' % (host.split('@')[1], i))
-    # TODO
-    # /etc/sysconfig/network HOSTNAME=kylin1
-    # hostname kylin1
-
-# TODO　更新/etc/sysconfig/network
+    for host,hostname in hostname_map.items():
+        files.append('/etc/hosts', '%s   %s' % (host, hostname))
+    get_ip = run("ifconfig| grep 192| awk -F: '{print$2}'| awk '{print $1}'")
+    hostname = hostname_map[get_ip]
+    run('hostname %s' % hostname)
+    files.sed('/etc/sysconfig/network', '^HOSTNAME=.*', 'HOSTNAME=%s' % hostname)
 
 
 @roles('cdh')
@@ -85,7 +93,7 @@ def config_hosts():
 def update_kernel():
     run('echo 10 > /proc/sys/vm/swappiness')
     run('echo never > /sys/kernel/mm/transparent_hugepage/defrag')
-    files.append('/etc/rc.local','echo never > /sys/kernel/mm/transparent_hugepage/defrag')
+    files.append('/etc/rc.local', 'echo never > /sys/kernel/mm/transparent_hugepage/defrag')
 
 
 @roles('cdh')
@@ -103,7 +111,7 @@ def ntp():
     run('chkconfig ntpd on')
 
 
-# cp /opt/cm-5.9.0/share/cmf/lib/mysql-connector-java-5.1.41-bin.jar /opt/cloudera/parcels/CDH-5.9.0-1.cdh5.9.0.p0.23/lib/hive/lib/
+#TODO hive添加驱动 cp /opt/cm-5.9.0/share/cmf/lib/mysql-connector-java-5.1.41-bin.jar /opt/cloudera/parcels/CDH-5.9.0-1.cdh5.9.0.p0.23/lib/hive/lib/
 @roles('cdh')
 @task
 def rpc():
@@ -111,10 +119,14 @@ def rpc():
     run('service rpcbind start')
     run('chkconfig rpcbind on')
 
+
 @roles('cdh')
+@parallel
 @task
 def yum():
     run('yum install -y perl vim')
+
+
 @roles('master')
 def install_jdk():
     """
@@ -131,16 +143,17 @@ def install_jdk():
 @task
 def init_mysql_driver():
     run('cp /data/python2.7/mysql-connector-java-5.1.41-bin.jar /opt/cm-5.9.0/share/cmf/lib')
-    # grant all privileges on *.* to 'root'@'%' identified  by 'admin'
-    # flush privileges;
-    # create database reports_manager;
-    # create database activity_monitor;
-    # create database hive;
+    # TODO 需要输入密码
+    run("""mysql -u root -p -e \"grant all privileges on *.* to 'root'@'%' identified  by 'admin';flush privileges;create database reports_manager;create database activity_monitor;create database hive;grant all privileges on *.* to 'root'@'kylin1' identified  by 'admin';flush privileges;\"""")
+    # run("""mysql -u root -p -e \"flush privileges\"""")
+    # run("""mysql -u root -p -e \"create database reports_manager\"""")
+    # run("""mysql -u root -p -e \"create database activity_monitor\"""")
+    # run("""mysql -u root -p -e \"create database hive\"""")
     with cd('/opt/cm-5.9.0'):
         """
           更新IP
         """
-        run("./share/cmf/schema/scm_prepare_database.sh mysql cm -h{mysql_host} -uroot -padmin --scm-host {scm_host} root admin scm -f".format(mysql_host='192.168.0.4',scm_host='192.168.0.4'))
+        run("./share/cmf/schema/scm_prepare_database.sh mysql cm -h{mysql_host} -uroot -padmin --scm-host {scm_host} root admin scm -f".format(mysql_host=env.hosts[:1][0], scm_host=env.hosts[:1][0]))
 
 
 @roles('master')
@@ -153,6 +166,7 @@ def update_master_host():
 
 
 @roles('master')
+@task
 def install_cm():
     """
       安装Cloudera manager
@@ -161,8 +175,7 @@ def install_cm():
         run('tar -zxvf /data/cloudera-manager-el6-cm5.9.0_x86_64.tar.gz')
     run('mkdir -p /opt/cloudera/parcel-repo')
     run('cp /data/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel /opt/cloudera/parcel-repo')
-    run(
-        'cp /data/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel.sha1 /opt/cloudera/parcel-repo/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel.sha')
+    run('cp /data/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel.sha1 /opt/cloudera/parcel-repo/CDH-5.9.0-1.cdh5.9.0.p0.23-el6.parcel.sha')
     run('cp /data/manifest.json /opt/cloudera/parcel-repo/manifest.json')
     run('chown -R cloudera-scm:cloudera-scm /opt/cloudera')
 
