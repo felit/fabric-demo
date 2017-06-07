@@ -2,7 +2,6 @@
 from __future__ import with_statement
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
 from fabric.contrib import files
-# root w@^s1kta!FQq7z3H
 env.hosts = ['root@192.168.0.2', 'root@192.168.0.4', 'root@192.168.0.3','root@192.168.0.5']
 env.password='Rootadmin1'
 hostname_map = {
