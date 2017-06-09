@@ -4,18 +4,25 @@ from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, host
 from fabric.contrib import files
 
 env.hosts = ['root@www.livedrof.com', 'hadoop@192.168.19.11', 'root@192.168.49.66']
-aliyun = ('root@www.livedrof.com', 'hadoop@192.168.19.11')
+
 env.roledefs = {
     # 'mysql': 'root@139.198.6.107'
     'mysql': 'hadoop@192.168.19.11'
 }
 global_var = 900
 
+aliyun = ('root@www.livedrof.com', 'hadoop@192.168.19.11')
+
 
 @task()
 @hosts(aliyun)
 def host_test():
-    run('uname -a', shell=False)
+    """
+        将参数存到env环境里面
+    :return:
+    """
+    env.result = run('uname -a')
+    print env.result
 
 
 @task
@@ -72,6 +79,11 @@ def get_all_ips():
     for host, ips in ip_list.items():
         ips_list += ips
     return ips_list
+
+
+@task
+def params_task(param1):
+    run('ls -la')
 
 
 @task
