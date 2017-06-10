@@ -1,0 +1,10 @@
+one "example.com" {
+        type master;
+        file "/etc/bind/zones/example.com.db";
+        };
+
+# This is the zone definition for reverse DNS. replace 0.168.192 with your network address in reverse notation - e.g my network address is 192.168.0
+zone "0.168.192.in-addr.arpa" {
+     type master;
+     file "/etc/bind/zones/rev.0.168.192.in-addr.arpa";
+};

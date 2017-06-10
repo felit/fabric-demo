@@ -1,3 +1,5 @@
+#-*- coding:utf8 -*-
+# 安装kylin信息
 # TODO
 # export HADOOP_USER_NAME=hdfs
 # export HBASE_HOME=/opt/cloudera/parcels/CDH/lib/hbase
