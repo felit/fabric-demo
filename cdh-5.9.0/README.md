@@ -4,4 +4,6 @@ Java JDK
 CDH离线文件
 parcel安装
 <!--放到百度云盘上去-->
+--- TODO
 配置信息读取config.yaml文件
+同步时间
