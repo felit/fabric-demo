@@ -21,7 +21,8 @@ env.roledefs = {
 """
 TODO
 配置: coord/postgresql.conf
-CREATE NODE dn3 WITH (TYPE='datanode', PORT=5432, HOST='192.168.18.168');
+CREATE NODE dn3 WITH (TYPE='datanode', PORT=5432, HOST='192.168.18.167', primary);
+CREATE NODE dn4 WITH (TYPE='datanode', PORT=5432, HOST='192.168.18.168');
 """
 
 
@@ -57,8 +58,8 @@ def init_gtm():
 @roles('coord')
 def init_coord():
     """
-    初始化协调节点
-    :return:
+        初始化协调节点
+        :return:
     """
     run('rm -fr /home/pgxc/coord')
     run('initdb -D /home/pgxc/coord --nodename co')
@@ -69,14 +70,30 @@ def init_datanode():
     """
        初始化数据节点
        TODO　dn名称
-    :return:
+        :return:
     """
     run('mkdir /home/pgxc/datanode')
     run('initdb -D /home/pgxc/coord --nodename dn1')
 
 
+def config_datanode_and_coord():
+    """
+        更新 pg_hba.conf
+        更新 postgres.conf
+        TODO gtm IP
+    :return:
+    """
+    files.append('pg_hba.conf', 'host    all              pgxc        192.168.0.0/16            trust')
+    files.append('postgres.conf', "listen_addresses = '*'")
+    files.append('postgres.conf', "gtm_host = '192.168.18.164'")
+
+
 def start_gtm():
     run('gtm -D gtm')
+
+
+def start_coord():
+    run('')
 
 
 def add_to_bashrc():
