@@ -15,6 +15,7 @@ env.hosts = [
 env.password = 'vagrant'
 env.roledefs = {
     'gtm': ['pgxc@192.168.18.164'],
+    'gtm_standby': ['pgxc@192.168.18.165'],
     'datanode': [''],
     'coord': ['pgxc@192.168.18.166'],
 }
