@@ -6,3 +6,4 @@ Pivotal GemFire 是内存中的分布式数据库
 简单的分布式节点管理
 
 作为世界规模最大的实时交易系统之一12306就是使用的#GemFire#
+https://wenku.baidu.com/view/7a4b7772e009581b6bd9eba0.html
