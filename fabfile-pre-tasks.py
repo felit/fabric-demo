@@ -1,4 +1,7 @@
 # -*- coding:utf8 -*-
+"""
+TODO 改成http安装
+"""
 from __future__ import with_statement
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, local,task
 from fabric.contrib import files
@@ -13,7 +16,7 @@ def mount_deploy_disk():
 
 def install_yum():
     run('yum update -y')
-    run('yum -y install wget unzip gcc openssl-devel zlib zlib-devel bind-utils vim')
+    run('yum -y install wget unzip gcc openssl-devel zlib zlib-devel bind-utils vim git')
 
 
 def install_python():

@@ -1,0 +1,4 @@
+使集群内的Host互通
+1.得到集群中各Host的publicKey
+2.设置每个结点的将publicKey添加至authorized_keys当中
+3.测试其连通性
