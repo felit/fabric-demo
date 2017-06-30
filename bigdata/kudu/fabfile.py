@@ -3,7 +3,7 @@ from __future__ import with_statement
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
 from fabric.contrib import files
 # env.hosts=['vagrant@192.168.18.164']
-env.hosts=['root@139.198.6.107']
+env.hosts = ['root@139.198.6.107']
 """ Check failed: _s.ok() Bad status: Not implemented: The CPU on this system (QEMU Virtual CPU)
  does not support the SSE4.2 instruction set which is required for running Kudu.
  If you are running inside a VM, you may need to enable SSE4.2 pass-through.
@@ -15,22 +15,28 @@ def install_pre_requirements():
     sudo('service ntpd start')
 
 @task
-def install():
+def install_online():
     with cd('/etc/yum.repos.d'):
         sudo('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/cloudera-kudu.repo')
     sudo('yum install -y kudu kudu-master kudu-tserver kudu-client0 kudu-client-devel')
 
 @task
-def install_by_rpm():
-
+def install_offline(version='1.3.0'):
+    """
+       离线安装
+       :return:
+    """
+    files = [
+        'kudu-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm',
+        'kudu-master-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm',
+        'kudu-tserver-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm',
+        'kudu-debuginfo-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm',
+        'kudu-client0-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm',
+        'kudu-client-devel-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm',
+    ]
     for file in files:
-        pass
-    run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/kudu-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm')
-    run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/kudu-master-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm')
-    run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/kudu-tserver-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm')
-    run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/kudu-debuginfo-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm')
-    run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/kudu-client0-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm')
-    run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/kudu-client-devel-1.3.0+cdh5.11.1+0-1.cdh5.11.1.p0.27.el6.x86_64.rpm')
+        run('wget http://archive.cloudera.com/kudu/redhat/6/x86_64/kudu/5/RPMS/x86_64/%s' % file)
+        sudo('rpm -ivh %s' % file)
 
 def config_master():
     sudo('')

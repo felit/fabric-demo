@@ -1,5 +1,5 @@
 from bigdata.kudu import fabfile as kudu
 
-
+# @task(default=True)
 def install():
-    kudu.install_by_rpm
+    kudu.install_offline()
