@@ -25,6 +25,9 @@ def is_centos():
     os = run('cat /etc/issue')
     return os.lower().find('centos') >= 0
 
+def has_user(username):
+    res = run('cat /etc/passwd | grep %s | wc -l' % username)
+    return res != '0'
 
 def linux_version():
     """
