@@ -9,3 +9,9 @@ TODO
 测试，在fabfile里直接测试
 支持ubuntu/centos
 解释与示例k
+TODO
+执行模型
+读取role信息及其参数
+
+
+export PYTHONPATH=$PYTHONPATH:/data/source/self/fabric-demo

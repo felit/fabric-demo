@@ -14,8 +14,15 @@ env.roledefs = {
              'root@192.168.0.6',
              'root@192.168.0.7',
              'root@192.168.0.8', ],
+    'kudu-master': ['root@192.168.0.3',
+                    'root@192.168.0.4'],
+    'kudu-tserver': ['root@192.168.0.3',
+                     'root@192.168.0.4',
+                     'root@192.168.0.5',
+                     'root@192.168.0.6',
+                     'root@192.168.0.7',
+                     'root@192.168.0.8', ]
 }
-
 
 
 @task(default=True)
