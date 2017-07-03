@@ -15,3 +15,12 @@ TODO
 
 
 export PYTHONPATH=$PYTHONPATH:/data/source/self/fabric-demo
+
+可用:
+kudu
+languages
+mycat
+
+
+编写命令行:
+fabx install scala jdk  -H www.livedrof.com

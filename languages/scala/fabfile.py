@@ -9,8 +9,9 @@ from fabric.contrib import files
 
 
 env.hosts = [
-    'vagrant@192.168.18.164',
-    'vagrant@192.168.18.190'
+    # 'vagrant@192.168.18.164',
+    # 'vagrant@192.168.18.190'
+    'root@www.livedrof.com'
 ]
 
 env.password = 'vagrant'
