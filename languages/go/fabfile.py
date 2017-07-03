@@ -9,8 +9,9 @@ from fabric.api import run, env, task
 from fabric.contrib import files
 
 env.hosts = [
-    'vagrant@192.168.18.164',
-    'vagrant@192.168.18.190'
+    # 'vagrant@192.168.18.164',
+    # 'vagrant@192.168.18.190'
+    'root@www.livedrof.com'
 ]
 
 
@@ -22,7 +23,7 @@ def test_install():
 def install(url='https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz'):
     run('wget %s -O go.tar.gz' % url)
     run('tar -zxvf go.tar.gz')
-    dir = run("tar -tf go.tar.gz | awk -F/ '{print $1}' | tail -n 1")
+    dir = run("tar -tf go.tar.gz | awk -F/ '{print $1}' | tail -n 1",shell=False)
     run('mv %s /opt/' % dir)
     files.append('.bashrc', 'export GOROOT=/opt/go')
     files.append('.bashrc', 'export GOBIN=$GOROOT/bin')

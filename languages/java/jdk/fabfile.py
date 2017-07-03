@@ -34,7 +34,7 @@ def install(path, install_path='/opt/jdk'):
     with cd(path):
         jdk_filename = run("ls -lh | grep jdk | tail -1 | awk '{print $9}'")
     run('tar -zxvf %s' % jdk_filename)
-    dir = run("tar -tf %s | awk -F/ '{print $1}' | tail -n 1" % jdk_filename)
+    dir = run("tar -tf %s | awk -F/ '{print $1}' | tail -n 1" % jdk_filename,shell=False)
     run('mv %s %s' % (dir, install_path))
     files.append('.bashrc', 'export JAVA_HOME=%s' % install_path)
     files.append('.bashrc', 'export PATH=$JAVA_HOME/bin:$PATH')

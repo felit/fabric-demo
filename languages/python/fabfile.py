@@ -43,7 +43,7 @@ def install():
 def install_python():
     run("wget {python_url} -O python.tar.gz".format(python_url=python_url))
     run("tar -zxvf python.tar.gz")
-    dir = run("tar -tf python.tar.gz | awk -F/ '{print $1}' | tail -n 1")
+    dir = run("tar -tf python.tar.gz | awk -F/ '{print $1}' | tail -n 1",shell=False)
     with cd(dir):
         run('./configure')
         run('make')
