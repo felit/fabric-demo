@@ -14,3 +14,10 @@ env.hosts = [
     # 'root@www.livedrof.com'
 ]
 from languages.go import fabfile as go
+from database.tidb import fabfile as tidb
+
+
+@task
+def install():
+    # go.install()
+    tidb.install()

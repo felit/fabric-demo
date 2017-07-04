@@ -21,8 +21,8 @@ def test_install():
 
 @task
 def install(url='https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz'):
-    # run('wget %s --no-check-certificate -O go.tar.gz' % url)
-    # run('tar -zxvf go.tar.gz')
+#     run('wget %s --no-check-certificate -O go.tar.gz' % url)
+#     run('tar -zxvf go.tar.gz')
     dir = run("tar -tf go.tar.gz | awk -F/ '{print $1}' | tail -n 1",shell=False)
     run('mv %s /opt/' % dir)
     files.append('.bashrc', 'export GOROOT=/opt/go')
