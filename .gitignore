@@ -1,7 +1,8 @@
-<<<<<<< HEAD
 .idea
 *.pyc
 *.jar
-=======
 *.pyc
->>>>>>> origin/master
+build
+dist
+fabric_library.egg-info
+test/hibench-6.0-conf

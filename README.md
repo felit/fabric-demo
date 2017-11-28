@@ -8,7 +8,7 @@ TODO
 可重用
 测试，在fabfile里直接测试
 支持ubuntu/centos
-解释与示例k
+解释与示例
 TODO
 执行模型
 读取role信息及其参数
@@ -23,4 +23,8 @@ mycat
 
 
 编写命令行:
-fabx install scala jdk  -H www.livedrof.com
+fab install scala jdk  -H www.livedrof.com
+
+
+１、建library
+２、
