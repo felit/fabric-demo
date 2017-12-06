@@ -55,8 +55,8 @@ def install_rabbitmq():
     # run('yum install -y xz')
 
     # run('rm rabbitmq-server-generic-unix-3.6.1.tar')
-    run('wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server-generic-unix-3.6.1.tar.xz -O rabbitmq-server-generic-unix-3.6.1.tar.xz')
-    run('xz -d rabbitmq-server-generic-unix-3.6.1.tar.xz')
+    # run('wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.1/rabbitmq-server-generic-unix-3.6.1.tar.xz -O rabbitmq-server-generic-unix-3.6.1.tar.xz')
+    # run('xz -d rabbitmq-server-generic-unix-3.6.1.tar.xz')
     run('tar -xvf rabbitmq-server-generic-unix-3.6.1.tar')
     sudo('cp -rf ./rabbitmq_server-3.6.1 /usr/local/')
 
