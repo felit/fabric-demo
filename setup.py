@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="fabric_library",
+    name="fabric-library",
     version="0.0.2",
     description="library for fabric",
     author="jack.cong",
@@ -10,6 +10,6 @@ setup(
     url="http://blog.livedrof.com",
     license="LGPL",
     packages=find_packages(exclude=['test']),
-    scripts=[],
-    py_modules=["fabric_library","languages.java.jdk.fabfile"]
+    scripts=["languages/java/jdk/fabfile.py"],
+    py_modules=["languages","languages.java","languages.java.jdk","languages.java.jdk.fabfile"]
 )
