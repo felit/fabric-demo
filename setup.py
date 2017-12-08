@@ -11,5 +11,6 @@ setup(
     license="LGPL",
     packages=find_packages(exclude=['test']),
     scripts=["languages/java/jdk/fabfile.py"],
-    py_modules=["languages","languages.java","languages.java.jdk","languages.java.jdk.fabfile"]
+    py_modules=["languages", "languages.java", "languages.java.jdk", "languages.java.jdk.fabfile",
+                "application", "application.tomcat", "application.tomcat.fabfile"]
 )

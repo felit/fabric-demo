@@ -9,6 +9,7 @@ TODO 查找文件
 from __future__ import with_statement
 from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task, settings, local
 from fabric.contrib import files
+import logging
 
 env.hosts = [
     # 'vagrant@192.168.18.164',
@@ -22,7 +23,7 @@ def test_install():
 
 
 @task
-def install(path, user='root', install_path='/opt/jdk', local_path=None, sudo=False):
+def install(path="~/", user='root', install_path='/opt/jdk', local_path=None, sudo=False):
     # 查看根目录d
     # 取第一个
     """
@@ -32,16 +33,17 @@ def install(path, user='root', install_path='/opt/jdk', local_path=None, sudo=Fa
         :param install_path:
         :return:
     """
+    # 得当前执行的IP等信息
     if local_path is not None:
-        local('scp %s vagrant@192.168.18.167:%s' % (local_path, path))
+        local('scp %s root@120.78.210.65:%s' % (local_path, path))
 
     with cd(path):
+        print(path)
         jdk_filename = run("ls -lh | grep jdk | tail -1 | awk '{print $9}'")
 
     # print('mkdir -p %s' % install_path)
     # sudo('mkdir -p %s' % install_path)
     # sudo('chown -R vagrant:vagrant /opt')
-    print(jdk_filename)
     run('tar -zxvf %s' % jdk_filename)
     dir = run("tar -tf %s | awk -F/ '{print $1}' | tail -n 1" % jdk_filename, shell=False)
     run('mv %s %s' % (dir, install_path))
