@@ -23,4 +23,4 @@ def install(path="~/", user='root', install_path='/opt/tomcat', local_path=None,
 @task
 def start(tomcat_root="/opt/tomcat"):
     with cd(tomcat_root):
-        run('bin/start.sh')
+        run('bin/startup.sh',shell=True,pty=True)
