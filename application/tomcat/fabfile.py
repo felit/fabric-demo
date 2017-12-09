@@ -2,14 +2,14 @@
 # 安装
 
 from __future__ import with_statement
-from fabric.api import run, cd, task, local
+from fabric.api import run, cd, task, local, env
 import logging
 
 
 @task
 def install(path="~/", user='root', install_path='/opt/tomcat', local_path=None, sudo=False):
     if local_path is not None:
-        local('scp %s root@120.78.210.65:%s' % (local_path, path))
+        local('scp %s %s@%s:%s' % (local_path, env.user, env.host, path))
 
     with cd(path):
         print(path)

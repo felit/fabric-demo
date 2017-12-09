@@ -35,7 +35,7 @@ def install(path="~/", user='root', install_path='/opt/jdk', local_path=None, su
     """
     # 得当前执行的IP等信息
     if local_path is not None:
-        local('scp %s root@120.78.210.65:%s' % (local_path, path))
+        local('scp %s %s@%s:%s' % (local_path, env.user, env.host, path))
 
     with cd(path):
         print(path)
