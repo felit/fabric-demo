@@ -26,3 +26,11 @@ def install(path="~/", user='root', install_path='/opt', local_path=None, sudo=F
     # run('tar -zxvf %s' % tomcat_filename)
     # dir = run("tar -tf %s | awk -F/ '{print $1}' | tail -n 1" % tomcat_filename, shell=False)
     # run('mv %s %s' % (dir, install_path))
+
+
+def config_elasticsearch():
+    pass
+
+
+def config_sonar():
+    pass

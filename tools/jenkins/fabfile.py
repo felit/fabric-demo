@@ -9,7 +9,6 @@ import logging
 
 env.hosts = []
 
-
 @task
 def install(path="~/", user='root', install_path='/opt/tomcat/webapps', local_path=None, sudo=False):
     if local_path is not None:
@@ -17,6 +16,7 @@ def install(path="~/", user='root', install_path='/opt/tomcat/webapps', local_pa
         print(green("jenkins安装完成,将%s安装至%s" % (local_path, install_path)))
     else:
         run("wget http://updates.jenkins-ci.org/download/war/2.89.1/jenkins.war %s" % install_path)
+    # if input(red('{} (y/n) '.format(msg))) != 'y':
     # with cd(path):
     #     print(path)
     #     tomcat_filename = run("ls -lh | grep tomcat | tail -1 | awk '{print $9}'")

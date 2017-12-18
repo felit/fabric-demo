@@ -28,3 +28,5 @@ fab install scala jdk  -H www.livedrof.com
 
 １、建library
 ２、
+
+---- 安装软件更方便
