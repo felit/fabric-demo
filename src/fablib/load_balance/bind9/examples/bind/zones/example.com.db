@@ -1,0 +1,14 @@
+example.com.      IN      SOA     ns1.example.com. admin.example.com. (                                                                                                  
+        2006081401
+        28800
+        3600
+        604800
+        38400
+        )
+example.com.      IN      NS              ns1.example.com.
+example.com.      IN      MX     10       mta.example.com.
+                 IN      A       192.168.18.190 
+www              IN      A       192.168.18.190
+www              IN      A       192.168.18.191
+mta              IN      A       192.168.18.190
+ns1              IN      A       192.168.18.190

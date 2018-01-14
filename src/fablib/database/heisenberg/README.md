@@ -1,0 +1,2 @@
+heisenberg 是百度的熊照同学(id:brucexx)编写的一款基于MySQL协议之上的分库分表中间件服务器，支持各种灵活（velocity脚本自定义）的分库分表规则，做到应用和分库分表相隔离，并且为mysql进行dbproxy,减少了db的连接IO压力，并且可做到读写分离以及replication的手工切换
+

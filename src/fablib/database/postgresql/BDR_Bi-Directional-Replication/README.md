@@ -1,0 +1,1 @@
+Bi-Directional Replication (BDR) 是 PostgreSQL 的异步多主复制系统，专门为允许地理上分布的集群而设计；支持最多 48 节点（未来版本还可能更多；是一个低开销，低维护技术，分布式数据库。

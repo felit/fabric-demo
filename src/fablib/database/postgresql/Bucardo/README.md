@@ -1,0 +1,1 @@
+Bucardo 是一个用 Perl 语言编写的 PostgreSQL的多Master节点复制系统

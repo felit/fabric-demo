@@ -1,0 +1,1 @@
+Manatee 是一个基于ZooKeeper的系统能够管理Postgres的备份和自动故障转移，Manatee和Moray共同提供高可用的键值服务。

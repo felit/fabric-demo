@@ -1,0 +1,1 @@
+Hubot基于脚本具有很高的灵活性，任何人都可以编写自己的脚本来扩展基本功能。脚本使用的语言是CoffeeScript，而Hubot运行在Node.js上
