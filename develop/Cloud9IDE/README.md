@@ -1,1 +1,0 @@
-Cloud9 IDE是一个基于Node.JS构建的JavaScript程序开发Web IDE。它拥有一个非常快的文本编辑器支持为JS, HTML, CSS和这几种的混合代码进行着色显示。Cloud9 IDE还为node.js和Google Chrome集成调试器可以在IDE中启动、暂停和停止。能够在云计算环境中测试和部署你的代码。使用WebDAV，它还可以连到远程工作台。Cloud9 IDE拥有一个插件系统用来扩展现有功能，当前该IDE已经捆绑好几个插件。

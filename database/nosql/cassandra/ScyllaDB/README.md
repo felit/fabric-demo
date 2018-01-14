@@ -1,1 +1,0 @@
-ScyllaDB 是用 C++ 重写的 Cassandra，每节点每秒处理 100 万 TPS。ScyllaDB 完全兼容 Apache Cassandra，拥有比 Cassandra 多 10x 倍的吞吐量，降低了延迟。

@@ -1,1 +1,0 @@
-Discourse 是 Stack Overflow 的联合创始人 Jeff Atwood 推出的一个新的开源论坛项目，其目的是为了改变十年未变的论坛软件。它摒弃了传统论坛的话题讨论形式、拥有自学习系统、全Web应用同时适用于桌面和移动终端。基于 Ruby on Rails 和 Ember.js 开发，数据库使用 PostgreSQL 和 Redis。

@@ -1,1 +1,0 @@
-Cobertura可用于分析Java代码的测试覆盖率。Cobertura根据没有被测试覆盖的代码生成基于HTML的报告。

@@ -1,9 +1,10 @@
 # -*- coding:utf8 -*-
 from __future__ import with_statement
-from fabric.api import run, env, execute, roles, runs_once, parallel, sudo, hosts, cd, task
-from fabric.contrib import files
-from bigdata.kudu import fabfile as kudu
-from common.ssh import fabfile as ssh
+
+from fabric.api import env, execute, runs_once, task
+
+from src.fablib.bigdata.kudu import fabfile as kudu
+
 
 env.hosts = ['root@192.168.0.2', 'root@192.168.0.3', 'root@192.168.0.4']
 env.roledefs = {

@@ -1,1 +1,0 @@
-Cuckoo-Schedule是基于Quartz-Schedule的轻量级任务调度框架，具有易学习、易上手、开发高效稳定的特点。Demo地址：http://cuckoo.hellosr.com。     

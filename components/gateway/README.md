@@ -1,1 +1,0 @@
-http restful api gateway

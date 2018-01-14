@@ -1,1 +1,0 @@
-Brackets 是 Adobe 的开源 HTML/CSS/JavaScript 集成开发环境。Brackets 当前为 Mac, Windows 以及 Linux (Debian/Ubuntu) 提供最新稳定版的二进制发布，源代码托管在 GitHub 上

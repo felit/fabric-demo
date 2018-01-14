@@ -1,1 +1,0 @@
-https://github.com/CNSRE/Zabbix-Templates.git

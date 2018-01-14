@@ -1,1 +1,0 @@
-Twitter在把存储系统从MySQL迁移到Cassandra的过程中，由于Cassandra没有顺序ID生成机制，于是自己开发了一套全局唯一ID生成服务：Snowflake。优点是：高性能，低延迟；独立的应用；按时间有序。缺点是：需要独立的开发和部署。

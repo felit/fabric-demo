@@ -1,1 +1,0 @@
-IndexR is a super fast columnar data formate on HDFS, which focus on fast analytic, both for massive static(historical) data and rapidly ingesting realtime data. IndexR is designed for OLAP. I

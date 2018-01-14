@@ -1,2 +1,0 @@
- 基于PostgreSQL的分布式数据库集群，同时适合OLTP 和OLAP应用。该项目的目标是整合Postgres-XC 和 Postgres-XL。Postgres-XC/XL/X2是一个开源项目。它提供了一个多主同步、透明的PostgreSQL的集群解决方案。不同于其它集群工具(如：Greenplum)重点突出OLAP，而Postgres-XC/XL/X2则更强调OLTP，在写入数据的时候具有很强的可扩展性，很好的引入了“多主架构”的集群环境概念。多主意味着在写入数据的时候不再受单一主节点的限制，在写入速度上将有很好的提升。
- 

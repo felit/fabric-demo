@@ -1,1 +1,0 @@
-pgFounie是一款专门为postgresql设计的日志分析工具。通过对postgresql的log进行分析，生成详细的报告。

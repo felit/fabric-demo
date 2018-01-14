@@ -4,5 +4,5 @@
 *.pyc
 build
 dist
-fabric_library.egg-info
+fablib.egg-info
 test/hibench-6.0-conf

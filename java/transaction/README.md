@@ -1,3 +1,0 @@
-EasyTransaction
-ByteJTA
-ByteTCC

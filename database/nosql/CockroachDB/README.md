@@ -1,1 +1,0 @@
-CockroachDB (蟑螂数据库）是一个可伸缩的、支持地理位置处理、支持事务处理的数据存储系统。CockroachDB 提供两种不同的的事务特性，包括快照隔离（snapshot isolation，简称SI）和顺序的快照隔离（SSI）语义，后者是默认的隔离级别。

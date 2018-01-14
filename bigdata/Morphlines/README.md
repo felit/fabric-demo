@@ -1,1 +1,0 @@
-其中，Sqoop用于在关系型数据库（RDBMS）和HDFS之间互相传输数据，Flume主要用于对日志文件的收集，Aegisthus主要用于从Cassandra抽取数据，而Morphlines则类似于Gobblin中的转换器，作为插件配合Sqoop和Flume使用
