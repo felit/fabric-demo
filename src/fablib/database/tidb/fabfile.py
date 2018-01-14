@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 from __future__ import with_statement
 from fabric.api import parallel, cd, task, run
-
+from fablib.common.linux import fabfile as linux
 # env.hosts = ['dev@192.168.181.21',
 #              'dev@192.168.181.22',
 #              'dev@192.168.181.23',
