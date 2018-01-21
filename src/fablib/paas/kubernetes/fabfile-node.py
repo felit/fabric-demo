@@ -18,6 +18,7 @@ def install():
     # sudo('yum update')
     sudo('yum makecache')
     sudo('yum install -y etcd kubernetes ntp flannel')
+    sudo('sudo yum install -y *rhsm*')
     sudo('systemctl disable firewalld')
     sudo('systemctl stop firewalld')
     sudo('ntpdate ntp1.aliyun.com')
