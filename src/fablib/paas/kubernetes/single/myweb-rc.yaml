@@ -3,7 +3,7 @@ kind: ReplicationController
 metadata:
   name: myweb
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     app: myweb
   template:
@@ -13,11 +13,11 @@ spec:
     spec:
       containers:
       - name: myweb
-        image: kubeguide/tomcat-app: v1
+        image: kubeguide/tomcat-app:v1
         ports:
         - containerPort: 8080
         env:
-        - name: MYSQL_SERViCE_HOST
-          Value: 'mysql'
+        - name: MYSQL_SERVICE_HOST
+          value: 'mysql'
         - name: MYSQL_SERVICE_PORT
-          Value: '3306'
+          value: '3306'
